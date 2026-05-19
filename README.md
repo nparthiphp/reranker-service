@@ -190,4 +190,4 @@ pytest tests/ -v --cov=app
 
 **Parthiban Natarajan** — General Manager / Solution Architect  
 Jio Platforms · 20+ years · Agentic AI · RAG · LangGraph  
-[LinkedIn](https://linkedin.com/in/YOUR_PROFILE) · [GitHub](https://github.com/nparthiphp)
+[LinkedIn](https://linkedin.com/in/parthibannatarajan) · [GitHub](https://github.com/nparthiphp)
