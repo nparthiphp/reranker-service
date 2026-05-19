@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  reranker:
+    build: .
+    ports:
+      - "8001:8001"
+    environment:
+      - CROSS_ENCODER_MODEL=cross-encoder/ms-marco-MiniLM-L-6-v2
+      - EMBEDDING_MODEL=multi-qa-MiniLM-L6-cos-v1
+      - DEFAULT_TOP_K=3
+      - DEFAULT_MMR_LAMBDA=0.7
+      - API_KEY=${API_KEY:-}          # set in .env or leave empty
+      - RATE_LIMIT_PER_MINUTE=100
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G    # MiniLM-L6 needs ~500MB, leave headroom
