@@ -1,0 +1,245 @@
+<svg width="960" height="720" viewBox="0 0 960 720" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Reranker Service Architecture</title>
+  <desc>Production-grade reranker microservice architecture showing request flow through middleware, routing, pipeline, and model layers</desc>
+
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 2L8 5L2 8" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 2L8 5L2 8" fill="none" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-indigo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 2L8 5L2 8" fill="none" stroke="#4F46E5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-emerald" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 2L8 5L2 8" fill="none" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 2L8 5L2 8" fill="none" stroke="#D97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- PAGE BG -->
+  <rect width="960" height="720" fill="#F8FAFC"/>
+
+  <!-- ── TITLE BLOCK ── -->
+  <rect x="0" y="0" width="960" height="62" fill="#1E293B"/>
+  <text x="480" y="26" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="16" font-weight="700" fill="#F1F5F9" letter-spacing="2">RERANKER SERVICE  —  ARCHITECTURE</text>
+  <text x="480" y="47" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" fill="#94A3B8" letter-spacing="1.5">Cross-Encoder · MMR · Score Fusion  ·  VertexMind.ai  ·  github.com/nparthiphp/reranker-service</text>
+
+  <!-- ══════════════════════════════════════════
+       CLIENT  x=20 y=88 w=116 h=60
+  ══════════════════════════════════════════ -->
+  <rect x="20" y="88" width="116" height="60" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="20" y="88" width="116" height="5" rx="4" fill="#3B82F6"/>
+  <text x="78" y="114" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" font-weight="700" fill="#1E3A8A">RAG Pipeline</text>
+  <text x="78" y="131" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#64748B">Client / Caller</text>
+
+  <!-- request arrow -->
+  <line x1="136" y1="108" x2="178" y2="108" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="157" y="103" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="8" fill="#6B7280">POST /rerank</text>
+
+  <!-- response arrow -->
+  <line x1="178" y1="130" x2="136" y2="130" stroke="#16A34A" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <text x="157" y="145" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="8" fill="#16A34A">response</text>
+
+  <!-- ══════════════════════════════════════════
+       SERVICE CONTAINER  x=180 y=74 w=756 h=616
+  ══════════════════════════════════════════ -->
+  <rect x="180" y="74" width="756" height="616" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+
+  <!-- container top bar -->
+  <rect x="180" y="74" width="756" height="36" rx="12" fill="#1E293B"/>
+  <rect x="180" y="98" width="756" height="12" fill="#1E293B"/>
+  <circle cx="202" cy="92" r="5" fill="#EF4444"/>
+  <circle cx="218" cy="92" r="5" fill="#F59E0B"/>
+  <circle cx="234" cy="92" r="5" fill="#22C55E"/>
+  <text x="558" y="97" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" font-weight="700" fill="#E2E8F0">FastAPI  ·  Docker  ·  Python 3.11</text>
+
+  <!-- ─────────────────────────────────────────
+       SECTION: MIDDLEWARE  y=125
+  ───────────────────────────────────────── -->
+  <text x="558" y="130" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" font-weight="700" fill="#94A3B8" letter-spacing="2">M I D D L E W A R E</text>
+
+  <!-- Auth  x=196 y=136 w=208 h=58 -->
+  <rect x="196" y="136" width="208" height="58" rx="7" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1.5"/>
+  <rect x="196" y="136" width="208" height="5" rx="4" fill="#F59E0B"/>
+  <text x="300" y="162" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" font-weight="700" fill="#92400E">API Key Auth</text>
+  <text x="300" y="180" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#B45309">middleware/auth.py</text>
+
+  <!-- Rate Limiter  x=420 y=136 w=208 h=58 -->
+  <rect x="420" y="136" width="208" height="58" rx="7" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1.5"/>
+  <rect x="420" y="136" width="208" height="5" rx="4" fill="#F59E0B"/>
+  <text x="524" y="162" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" font-weight="700" fill="#92400E">Rate Limiter</text>
+  <text x="524" y="180" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#B45309">middleware/rate_limiter.py</text>
+
+  <!-- Schema Validator  x=644 y=136 w=208 h=58 -->
+  <rect x="644" y="136" width="208" height="58" rx="7" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1.5"/>
+  <rect x="644" y="136" width="208" height="5" rx="4" fill="#F59E0B"/>
+  <text x="748" y="162" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" font-weight="700" fill="#92400E">Schema Validator</text>
+  <text x="748" y="180" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#B45309">models/schemas.py</text>
+
+  <!-- arrow: middleware → router -->
+  <line x1="558" y1="194" x2="558" y2="222" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ─────────────────────────────────────────
+       API ROUTER  x=374 y=224 w=368 h=54
+  ───────────────────────────────────────── -->
+  <rect x="374" y="224" width="368" height="54" rx="7" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+  <rect x="374" y="224" width="368" height="5" rx="4" fill="#3B82F6"/>
+  <text x="558" y="250" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12" font-weight="700" fill="#1E3A8A">API Router</text>
+  <text x="558" y="268" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#3B82F6">POST /rerank  ·  GET /health  ·  GET /methods</text>
+
+  <!-- arrow: router → method selector -->
+  <line x1="558" y1="278" x2="558" y2="306" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ─────────────────────────────────────────
+       METHOD SELECTOR  x=354 y=308 w=408 h=54
+  ───────────────────────────────────────── -->
+  <rect x="354" y="308" width="408" height="54" rx="7" fill="#F5F3FF" stroke="#C4B5FD" stroke-width="1.5"/>
+  <rect x="354" y="308" width="408" height="5" rx="4" fill="#7C3AED"/>
+  <text x="558" y="334" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12" font-weight="700" fill="#4C1D95">Method Selector</text>
+  <text x="558" y="352" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#6D28D9">cross_encoder  ·  mmr  ·  ensemble  (default)</text>
+
+  <!-- ─────────────────────────────────────────
+       PIPELINE LABEL  y=382
+  ───────────────────────────────────────── -->
+  <text x="558" y="382" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" font-weight="700" fill="#94A3B8" letter-spacing="2">P O S T - R E T R I E V A L   P I P E L I N E</text>
+
+  <!-- Pipeline container  x=192 y=390 w=680 h=138 -->
+  <rect x="192" y="390" width="680" height="138" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="6 3"/>
+
+  <!-- ── STEP 1: Cross-Encoder  x=204 y=402 w=202 h=112 ── -->
+  <rect x="204" y="402" width="202" height="112" rx="7" fill="#FFFFFF" stroke="#4F46E5" stroke-width="1.5"/>
+  <rect x="204" y="402" width="202" height="5" rx="4" fill="#4F46E5"/>
+  <!-- badge -->
+  <rect x="212" y="415" width="20" height="20" rx="5" fill="#4F46E5"/>
+  <text x="222" y="429" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" font-weight="700" fill="#FFFFFF">1</text>
+  <text x="305" y="429" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" font-weight="700" fill="#3730A3">Cross-Encoder</text>
+  <text x="305" y="448" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#4F46E5">services/cross_encoder.py</text>
+  <text x="305" y="467" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#6B7280">Relevance scoring</text>
+  <text x="305" y="484" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#6B7280">Q · K attention pairs</text>
+  <text x="305" y="501" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#6B7280">Drop irrelevant chunks</text>
+
+  <!-- arrow step 1 → 2 -->
+  <line x1="406" y1="458" x2="432" y2="458" stroke="#4F46E5" stroke-width="1.5" marker-end="url(#arr-indigo)"/>
+
+  <!-- ── STEP 2: MMR  x=434 y=402 w=202 h=112 ── -->
+  <rect x="434" y="402" width="202" height="112" rx="7" fill="#FFFFFF" stroke="#059669" stroke-width="1.5"/>
+  <rect x="434" y="402" width="202" height="5" rx="4" fill="#059669"/>
+  <rect x="442" y="415" width="20" height="20" rx="5" fill="#059669"/>
+  <text x="452" y="429" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" font-weight="700" fill="#FFFFFF">2</text>
+  <text x="535" y="429" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" font-weight="700" fill="#065F46">MMR Filter</text>
+  <text x="535" y="448" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#059669">services/mmr.py</text>
+  <text x="535" y="467" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#6B7280">Diversity filter</text>
+  <text x="535" y="484" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#6B7280">λ = 0.7 · relevance / diversity</text>
+  <text x="535" y="501" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#6B7280">Remove redundant chunks</text>
+
+  <!-- arrow step 2 → 3 -->
+  <line x1="636" y1="458" x2="662" y2="458" stroke="#059669" stroke-width="1.5" marker-end="url(#arr-emerald)"/>
+
+  <!-- ── STEP 3: Score Fusion  x=664 y=402 w=202 h=112 ── -->
+  <rect x="664" y="402" width="202" height="112" rx="7" fill="#FFFFFF" stroke="#D97706" stroke-width="1.5"/>
+  <rect x="664" y="402" width="202" height="5" rx="4" fill="#D97706"/>
+  <rect x="672" y="415" width="20" height="20" rx="5" fill="#D97706"/>
+  <text x="682" y="429" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" font-weight="700" fill="#FFFFFF">3</text>
+  <text x="765" y="429" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" font-weight="700" fill="#78350F">Score Fusion</text>
+  <text x="765" y="448" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#D97706">services/ensemble.py</text>
+  <text x="765" y="467" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#6B7280">Weighted combination</text>
+  <text x="765" y="484" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#6B7280">CE × 0.6 + orig × 0.2</text>
+  <text x="765" y="501" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#6B7280">+ MMR × 0.2 → final rank</text>
+
+  <!-- fork lines from method selector into each step -->
+  <!-- left fork → CE -->
+  <line x1="440" y1="362" x2="440" y2="390" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="305" y1="390" x2="440" y2="390" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="305" y1="390" x2="305" y2="402" stroke="#4F46E5" stroke-width="1.5" marker-end="url(#arr-indigo)"/>
+
+  <!-- centre fork → MMR -->
+  <line x1="558" y1="362" x2="558" y2="390" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="535" y1="390" x2="558" y2="390" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="535" y1="390" x2="535" y2="402" stroke="#059669" stroke-width="1.5" marker-end="url(#arr-emerald)"/>
+
+  <!-- right fork → Score Fusion -->
+  <line x1="676" y1="362" x2="676" y2="390" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="676" y1="390" x2="765" y2="390" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="765" y1="390" x2="765" y2="402" stroke="#D97706" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+  <!-- arrow: pipeline → output -->
+  <line x1="558" y1="528" x2="558" y2="556" stroke="#16A34A" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+  <!-- ─────────────────────────────────────────
+       OUTPUT  x=374 y=558 w=368 h=54
+  ───────────────────────────────────────── -->
+  <rect x="374" y="558" width="368" height="54" rx="7" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+  <rect x="374" y="558" width="368" height="5" rx="4" fill="#16A34A"/>
+  <text x="558" y="584" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12" font-weight="700" fill="#14532D">Ranked Response</text>
+  <text x="558" y="602" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#15803D">top-K chunks  ·  scores  ·  rank  ·  reason  ·  metadata</text>
+
+  <!-- ─────────────────────────────────────────
+       MODEL LAYER  y=632
+  ───────────────────────────────────────── -->
+  <text x="558" y="634" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" font-weight="700" fill="#94A3B8" letter-spacing="2">M O D E L   L A Y E R</text>
+
+  <!-- MiniLM  x=196 y=642 w=218 h=40 -->
+  <rect x="196" y="642" width="218" height="40" rx="6" fill="#F5F3FF" stroke="#C4B5FD" stroke-width="1.5"/>
+  <text x="305" y="659" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" font-weight="700" fill="#3730A3">ms-marco-MiniLM-L-6-v2</text>
+  <text x="305" y="675" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#6D28D9">22M params · CPU · BERT encoder</text>
+
+  <!-- Sentence Transformer  x=430 y=642 w=218 h=40 -->
+  <rect x="430" y="642" width="218" height="40" rx="6" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+  <text x="539" y="659" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" font-weight="700" fill="#1E3A8A">Sentence Transformer</text>
+  <text x="539" y="675" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#1D4ED8">Embeddings · MMR cosine sim</text>
+
+  <!-- Config  x=664 y=642 w=202 h=40 -->
+  <rect x="664" y="642" width="202" height="40" rx="6" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
+  <text x="765" y="659" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" font-weight="700" fill="#374151">core/settings.py</text>
+  <text x="765" y="675" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#6B7280">TOP_K · λ · weights · .env</text>
+
+  <!-- ══════════════════════════════════════════
+       LEGEND  x=20 y=210 w=148 h=240
+  ══════════════════════════════════════════ -->
+  <rect x="20" y="210" width="148" height="246" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+  <rect x="20" y="210" width="148" height="5" rx="4" fill="#1E293B"/>
+  <text x="94" y="232" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" font-weight="700" fill="#374151" letter-spacing="1">LEGEND</text>
+
+  <!-- legend items -->
+  <rect x="36" y="244" width="12" height="12" rx="3" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1.5"/>
+  <rect x="36" y="244" width="12" height="4" rx="2" fill="#F59E0B"/>
+  <text x="56" y="255" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#374151">Middleware</text>
+
+  <rect x="36" y="265" width="12" height="12" rx="3" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+  <rect x="36" y="265" width="12" height="4" rx="2" fill="#3B82F6"/>
+  <text x="56" y="276" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#374151">Router / Selector</text>
+
+  <rect x="36" y="286" width="12" height="12" rx="3" fill="#FFFFFF" stroke="#4F46E5" stroke-width="1.5"/>
+  <rect x="36" y="286" width="12" height="4" rx="2" fill="#4F46E5"/>
+  <text x="56" y="297" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#374151">Cross-Encoder</text>
+
+  <rect x="36" y="307" width="12" height="12" rx="3" fill="#FFFFFF" stroke="#059669" stroke-width="1.5"/>
+  <rect x="36" y="307" width="12" height="4" rx="2" fill="#059669"/>
+  <text x="56" y="318" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#374151">MMR Filter</text>
+
+  <rect x="36" y="328" width="12" height="12" rx="3" fill="#FFFFFF" stroke="#D97706" stroke-width="1.5"/>
+  <rect x="36" y="328" width="12" height="4" rx="2" fill="#D97706"/>
+  <text x="56" y="339" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#374151">Score Fusion</text>
+
+  <rect x="36" y="349" width="12" height="12" rx="3" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+  <rect x="36" y="349" width="12" height="4" rx="2" fill="#16A34A"/>
+  <text x="56" y="360" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#374151">Output</text>
+
+  <line x1="36" y1="378" x2="48" y2="378" stroke="#6B7280" stroke-width="1.5"/>
+  <text x="56" y="382" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#374151">Request flow</text>
+
+  <line x1="36" y1="398" x2="48" y2="398" stroke="#16A34A" stroke-width="1.5"/>
+  <text x="56" y="402" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#374151">Response flow</text>
+
+  <line x1="36" y1="418" x2="48" y2="418" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="56" y="422" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#374151">Method fork</text>
+
+  <!-- ── FOOTER ── -->
+  <rect x="0" y="700" width="960" height="20" fill="#F1F5F9"/>
+  <text x="480" y="714" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,monospace" font-size="9" fill="#94A3B8">github.com/nparthiphp/reranker-service  ·  VertexMind.ai  ·  Production-Grade RAG Infrastructure</text>
+
+</svg>
