@@ -153,6 +153,8 @@ reranker-service/
 └── .env.example
 ```
 
+![Reranker Service Architecture](docs/architecture.svg)
+
 ---
 
 ## 🐳 Docker
