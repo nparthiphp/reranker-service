@@ -153,7 +153,7 @@ reranker-service/
 └── .env.example
 ```
 
-![Reranker Service Architecture](docs/architecture.svg)
+![Reranker Service Architecture](docs/reranker-architecture.svg)
 
 ---
 
